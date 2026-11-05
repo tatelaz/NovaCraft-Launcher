@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-mac:
-    name: Build macOS (.dmg)
+    name: Build macOS Universal (.dmg per Apple Silicon ARM e Intel)
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -19,21 +19,23 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Install Rust
+      - name: Install Rust & Apple Targets (ARM64 + Intel)
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-apple-darwin, x86_64-apple-darwin
+          targets: aarch64-apple-darwin, x86_64-apple-darwin, universal-apple-darwin
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Tauri App for macOS
-        run: npm run tauri build
+      - name: Build Tauri Universal App for macOS (ARM + Intel)
+        run: npm run tauri build -- --target universal-apple-darwin
 
       - name: Upload macOS Artifacts (.dmg e .app)
         uses: actions/upload-artifact@v4
         with:
-          name: NovaCraft-macOS
+          name: NovaCraft-macOS-Universal
           path: |
+            src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
+            src-tauri/target/universal-apple-darwin/release/bundle/macos/*.app
             src-tauri/target/release/bundle/dmg/*.dmg
             src-tauri/target/release/bundle/macos/*.app
