@@ -1,0 +1,29 @@
+[package]
+name = "novacraft-launcher"
+version = "0.1.0"
+description = "NovaCraft Launcher - A modern Minecraft launcher"
+authors = ["NovaCraft Team"]
+edition = "2021"
+
+[lib]
+name = "novacraft_launcher_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+reqwest = { version = "0.12", features = ["json", "stream"] }
+tokio = { version = "1", features = ["full"] }
+sha1 = "0.10"
+md-5 = "0.10"
+zip = "2"
+dirs = "6"
+regex = "1"
+futures-util = "0.3"
+urlencoding = "2.1"
+base64 = "0.22"

@@ -1,0 +1,47 @@
+/* ========================================
+   NovaCraft Launcher — Animations
+   Subtle, restrained motion
+   ======================================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Diagonal stripes scrolling across the progress fill */
+@keyframes progressStripes {
+  from { background-position: 0 0; }
+  to   { background-position: 28px 0; }
+}
+
+/* Gentle pulsing status dot */
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* ---- Applied ---- */
+
+.app-container { animation: fadeIn 0.5s ease-out; }
+
+.panel { animation: riseIn 0.5s ease-out 0.10s both; }
+
+.character { animation: riseIn 0.5s ease-out 0.20s both; }
+
+.status-bar { animation: riseIn 0.5s ease-out 0.30s both; }
+
+.download-overlay.active .download-card { animation: riseIn 0.35s ease-out; }
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

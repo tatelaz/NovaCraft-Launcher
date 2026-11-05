@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NovaCraft Launcher</title>
+  <meta name="description" content="NovaCraft - A modern, fast and premium Minecraft launcher" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles/main.css" />
+  <link rel="stylesheet" href="./styles/components.css" />
+  <link rel="stylesheet" href="./styles/animations.css" />
+</head>
+<body>
+  <div class="app-container" id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo" id="sidebar-logo">
+        <span class="logo-icon">N</span>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" id="nav-home" title="Home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </button>
+        <button class="nav-btn" id="nav-mods" title="Mods & Shader">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        </button>
+        <button class="nav-btn" id="nav-instances" title="Profili & Istanze">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        </button>
+        <button class="nav-btn" id="nav-logs" title="Console Log">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        </button>
+        <button class="nav-btn" id="nav-settings" title="Impostazioni">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <span class="version-tag">v0.2.0</span>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+      <!-- Header -->
+      <header class="header" id="header">
+        <div class="header-brand">
+          <h1 class="header-title">NovaCraft</h1>
+          <span class="header-subtitle">Launcher</span>
+        </div>
+        <div class="header-profile-badge" id="header-active-profile">
+          <span class="profile-dot"></span>
+          <span class="profile-name-label" id="active-profile-name">Predefinito</span>
+        </div>
+      </header>
+
+      <!-- ===== HOME VIEW ===== -->
+      <div class="view active" id="view-home">
+        <div class="stage" id="stage">
+          <!-- Controls panel -->
+          <section class="panel" id="panel">
+            <!-- Username -->
+            <div class="control-group" id="username-group">
+              <label class="control-label" for="username-input">Nome giocatore</label>
+              <div class="username-wrapper" id="username-wrapper">
+                <input
+                  type="text"
+                  class="username-input"
+                  id="username-input"
+                  placeholder="Il tuo nome"
+                  maxlength="16"
+                  value="Steve"
+                  spellcheck="false"
+                  autocomplete="off"
+                  list="username-list"
+                />
+                <datalist id="username-list"></datalist>
+              </div>
+            </div>
+
+            <!-- Loader Toggle (Vanilla / Fabric) -->
+            <div class="control-group" id="loader-group">
+              <label class="control-label">Mod Loader</label>
+              <div class="pill-selector" id="loader-selector">
+                <button class="pill-btn active" data-loader="vanilla" type="button">Vanilla</button>
+                <button class="pill-btn" data-loader="fabric" type="button">Fabric</button>
+              </div>
+              <div class="loader-status-hint" id="loader-status-hint" style="display: none;">
+                <span class="status-indicator"></span>
+                <span id="loader-status-text">Fabric attivo</span>
+                <button class="btn-link-action" id="btn-quick-mods-folder" type="button">Cartella Mod</button>
+              </div>
+            </div>
+
+            <!-- Version Selector -->
+            <div class="control-group" id="version-group">
+              <label class="control-label" for="version-select">Versione di Minecraft</label>
+              <div class="version-filter" id="version-filter">
+                <button class="filter-btn active" data-filter="release" type="button">Release</button>
+                <button class="filter-btn" data-filter="snapshot" type="button">Snapshot</button>
+                <button class="filter-btn" data-filter="all" type="button">Tutte</button>
+              </div>
+              <div class="select-wrapper">
+                <select class="version-selector" id="version-select">
+                  <option value="" disabled selected>Caricamento…</option>
+                </select>
+                <div class="select-arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- RAM Slider -->
+            <div class="control-group" id="ram-group">
+              <label class="control-label" for="ram-slider">
+                Memoria RAM: <span class="ram-value" id="ram-value">2048 MB</span>
+              </label>
+              <input
+                type="range"
+                class="ram-slider"
+                id="ram-slider"
+                min="1024"
+                max="16384"
+                step="512"
+                value="2048"
+              />
+              <div class="ram-marks">
+                <span>1 GB</span>
+                <span>8 GB</span>
+                <span>16 GB</span>
+              </div>
+            </div>
+
+            <!-- Play Button -->
+            <button class="play-btn" id="play-btn" type="button">
+              <span class="play-icon">▶</span>
+              <span class="play-text" id="play-text">GIOCA</span>
+            </button>
+          </section>
+
+          <!-- Interactive 3D character -->
+          <aside class="character" id="character">
+            <div class="character-stage">
+              <canvas class="skin-canvas" id="skin-canvas"></canvas>
+            </div>
+            <div class="character-name" id="character-name">Steve</div>
+            <div class="character-hint">↔ Trascina per ruotare</div>
+            
+            <!-- Skin Custom Actions -->
+            <div class="skin-actions">
+              <input type="file" id="skin-file-input" accept="image/png" style="display: none;" />
+              <button class="skin-btn" id="btn-upload-skin" type="button" title="Carica file .png dal computer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Carica Skin .png
+              </button>
+              <button class="skin-btn-subtle" id="btn-reset-skin" type="button" title="Usa skin da nome utente">
+                Reset
+              </button>
+            </div>
+          </aside>
+        </div>
+      </div><!-- /view-home -->
+
+      <!-- ===== MODS & MODRINTH VIEW ===== -->
+      <div class="view" id="view-mods">
+        <div class="subview-container">
+          <div class="subview-header">
+            <div>
+              <h2 class="subview-title">Mods & Shaders</h2>
+              <p class="subview-desc">Cerca e scarica mod direttamente da Modrinth o gestisci i file installati.</p>
+            </div>
+            <div class="subview-tabs">
+              <button class="tab-btn active" id="tab-browse-mods" type="button">Modrinth</button>
+              <button class="tab-btn" id="tab-installed-mods" type="button">Installate (<span id="installed-mods-count">0</span>)</button>
+              <button class="btn-secondary btn-sm" id="btn-open-mods-folder" type="button">Apri cartella</button>
+            </div>
+          </div>
+
+          <!-- Modrinth Search Panel -->
+          <div class="mods-section" id="section-modrinth">
+            <div class="search-bar-row">
+              <div class="search-input-wrapper">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" class="search-input" id="mod-search-input" placeholder="Cerca mod, shader, texture pack (es. Sodium, Iris, Lithium)..." />
+                <button class="search-clear-btn" id="mod-search-clear" type="button" style="display: none;">✕</button>
+              </div>
+              <div class="filter-pills" id="mod-type-filter">
+                <button class="filter-pill active" data-type="mod" type="button">Mod</button>
+                <button class="filter-pill" data-type="shader" type="button">Shader</button>
+                <button class="filter-pill" data-type="resourcepack" type="button">Resource Pack</button>
+              </div>
+            </div>
+
+            <!-- Results container -->
+            <div class="mods-results-container" id="mods-results-container">
+              <div class="mods-grid" id="mods-results-grid"></div>
+              <div class="empty-state" id="mods-empty-state" style="display: none;">
+                <p>Nessun risultato trovato per questa versione di Minecraft.</p>
+              </div>
+              <div class="loading-state" id="mods-loading-state" style="display: none;">
+                <div class="spinner"></div>
+                <span>Caricamento da Modrinth…</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Installed Mods Panel -->
+          <div class="mods-section" id="section-installed" style="display: none;">
+            <div class="installed-mods-list" id="installed-mods-list">
+              <!-- Dynamically populated -->
+            </div>
+            <div class="empty-state" id="installed-empty-state" style="display: none;">
+              <p>Nessuna mod installata in questo profilo.</p>
+              <button class="btn-secondary btn-sm" id="btn-go-browse-mods" type="button">Cerca su Modrinth</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /view-mods -->
+
+      <!-- ===== INSTANCES VIEW ===== -->
+      <div class="view" id="view-instances">
+        <div class="subview-container">
+          <div class="subview-header">
+            <div>
+              <h2 class="subview-title">Profili e Istanze</h2>
+              <p class="subview-desc">Crea profili isolati con versioni, loader e modpack separati.</p>
+            </div>
+            <button class="btn-primary-action" id="btn-show-new-instance" type="button">
+              + Nuovo Profilo
+            </button>
+          </div>
+
+          <!-- Create Instance Form (collapsible) -->
+          <div class="new-instance-card" id="new-instance-card" style="display: none;">
+            <div class="card-header">
+              <h3 class="card-title">Crea nuovo profilo</h3>
+              <button class="card-close" id="btn-cancel-new-instance" type="button">✕</button>
+            </div>
+            <div class="form-grid">
+              <div class="form-field">
+                <label class="form-label" for="inst-name-input">Nome del profilo</label>
+                <input type="text" class="form-input" id="inst-name-input" placeholder="es. Survival Moddato, PvP..." />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="inst-version-select">Versione Minecraft</label>
+                <select class="form-select" id="inst-version-select"></select>
+              </div>
+              <div class="form-field">
+                <label class="form-label">Mod Loader</label>
+                <div class="pill-selector" id="inst-loader-selector">
+                  <button class="pill-btn active" data-loader="vanilla" type="button">Vanilla</button>
+                  <button class="pill-btn" data-loader="fabric" type="button">Fabric</button>
+                </div>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="inst-ram-slider">RAM dedicata (<span id="inst-ram-val">2048 MB</span>)</label>
+                <input type="range" class="ram-slider" id="inst-ram-slider" min="1024" max="16384" step="512" value="2048" />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-secondary" id="btn-discard-instance" type="button">Annulla</button>
+              <button class="btn-primary" id="btn-create-instance" type="button">Crea Profilo</button>
+            </div>
+          </div>
+
+          <!-- Instances list -->
+          <div class="instances-grid" id="instances-list"></div>
+        </div>
+      </div><!-- /view-instances -->
+
+      <!-- ===== LOGS / CONSOLE VIEW ===== -->
+      <div class="view" id="view-logs">
+        <div class="subview-container log-console-container">
+          <div class="subview-header">
+            <div>
+              <h2 class="subview-title">Console di Gioco</h2>
+              <p class="subview-desc">Monitora i log e gli output di Minecraft in tempo reale.</p>
+            </div>
+            <div class="console-actions">
+              <label class="console-autoscroll">
+                <input type="checkbox" id="chk-autoscroll" checked />
+                <span>Auto-scroll</span>
+              </label>
+              <button class="btn-secondary btn-sm" id="btn-copy-logs" type="button">Copia log</button>
+              <button class="btn-secondary btn-sm" id="btn-clear-logs" type="button">Pulisci</button>
+            </div>
+          </div>
+
+          <div class="console-terminal-wrapper">
+            <div class="console-terminal" id="console-output">
+              <div class="log-line log-info">[NovaCraft] Console pronta. I log appariranno qui all'avvio del gioco.</div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /view-logs -->
+
+      <!-- ===== SETTINGS VIEW ===== -->
+      <div class="view" id="view-settings">
+        <div class="settings">
+          <h2 class="settings-title">Impostazioni</h2>
+
+          <section class="settings-group">
+            <h3 class="settings-heading">Cartella di gioco</h3>
+            <div class="settings-row">
+              <code class="settings-path" id="game-dir-path">…</code>
+              <button class="btn-secondary" id="btn-open-folder" type="button">Apri cartella</button>
+            </div>
+          </section>
+
+          <section class="settings-group">
+            <h3 class="settings-heading">Java Runtime</h3>
+            <div class="settings-row">
+              <span class="settings-info" id="java-info">Rilevamento…</span>
+              <button class="btn-secondary" id="btn-open-runtimes" type="button">Apri cartella Java</button>
+            </div>
+            <p class="settings-hint">NovaCraft gestisce e scarica automaticamente le versioni corrette di Java (Adoptium Temurin 8, 17, 21, 25+) per qualsiasi versione di Minecraft.</p>
+          </section>
+
+          <section class="settings-group">
+            <h3 class="settings-heading">Comportamento</h3>
+            <label class="settings-toggle">
+              <input type="checkbox" id="opt-close-on-launch" />
+              <span class="toggle-track"><span class="toggle-thumb"></span></span>
+              <span class="toggle-label">Chiudi il launcher quando avvio il gioco</span>
+            </label>
+          </section>
+
+          <section class="settings-group">
+            <h3 class="settings-heading">Info</h3>
+            <p class="settings-info">NovaCraft Launcher v0.2.0 — costruito con Tauri v2 + Rust (leggero, sicuro, no bloatware)</p>
+          </section>
+        </div>
+      </div>
+
+      <!-- Status Bar -->
+      <footer class="status-bar" id="status-bar">
+        <span class="status-item" id="status-java">Java: controllo…</span>
+        <span class="status-separator">•</span>
+        <span class="status-item" id="status-loader">Vanilla</span>
+        <span class="status-separator">•</span>
+        <span class="status-item" id="status-dir">NovaCraft</span>
+      </footer>
+    </main>
+
+    <!-- Download Progress Overlay -->
+    <div class="download-overlay" id="download-overlay">
+      <div class="download-card" id="download-card">
+        <div class="download-header">
+          <h2 class="download-title">Download in corso</h2>
+          <span class="download-percentage" id="progress-text">0%</span>
+        </div>
+        <div class="progress-bar-container" id="progress-bar-container">
+          <div class="progress-bar-fill" id="progress-bar-fill"></div>
+        </div>
+        <p class="download-stage" id="progress-stage">Preparazione…</p>
+      </div>
+    </div>
+
+    <!-- Error toast -->
+    <div class="toast" id="error-toast" role="alert">
+      <div class="toast-header">
+        <span class="toast-title" id="error-title">Errore</span>
+        <button class="toast-close" id="error-close" type="button" aria-label="Chiudi">✕</button>
+      </div>
+      <div class="toast-message" id="error-message"></div>
+      <pre class="toast-details" id="error-details"></pre>
+    </div>
+  </div>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
