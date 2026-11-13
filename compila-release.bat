@@ -25,7 +25,16 @@ if not exist "NovaCraft-Release\" mkdir "NovaCraft-Release"
 
 echo [3/3] Copia dei file generati in NovaCraft-Release...
 copy /Y "src-tauri\target\release\novacraft-launcher.exe" "NovaCraft-Release\NovaCraft-Launcher.exe" >nul
-copy /Y "src-tauri\target\release\bundle\nsis\NovaCraft Launcher_0.1.0_x64-setup.exe" "NovaCraft-Release\NovaCraft-Launcher-Setup.exe" >nul
+if %errorlevel% neq 0 echo [ATTENZIONE] NovaCraft-Launcher.exe non trovato.
+
+:: Il nome dell'installer contiene la versione (es. _0.2.0_): lo cerchiamo con
+:: un jolly, cosi' lo script funziona anche quando la versione cambia.
+set "SETUP_FOUND="
+for %%F in ("src-tauri\target\release\bundle\nsis\*_x64-setup.exe") do (
+    copy /Y "%%F" "NovaCraft-Release\NovaCraft-Launcher-Setup.exe" >nul
+    set "SETUP_FOUND=1"
+)
+if not defined SETUP_FOUND echo [ATTENZIONE] Installer non trovato in src-tauri\target\release\bundle\nsis.
 
 echo.
 echo ===================================================

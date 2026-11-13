@@ -558,6 +558,7 @@
   font-size: 13px;
   color: var(--text-dim);
   line-height: 1.45;
+  overflow-wrap: anywhere; /* long folder paths must wrap, not get cut */
 }
 
 .toast-details {
@@ -1177,6 +1178,13 @@
 .btn-icon-subtle svg {
   width: 15px;
   height: 15px;
+}
+
+.btn-icon-subtle.confirm {
+  color: var(--text-error);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 /* ========================================

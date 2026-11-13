@@ -7,3 +7,4 @@ pub mod launch;
 pub mod java;
 pub mod fabric;
 pub mod modrinth;
+pub mod skinpack;
