@@ -11,18 +11,20 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
+      # "universal-apple-darwin" is not a real Rust target: Tauri builds the two
+      # targets below and glues them into one Universal app by itself.
       - name: Install Rust & Apple Targets (ARM64 + Intel)
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-apple-darwin, x86_64-apple-darwin, universal-apple-darwin
+          targets: aarch64-apple-darwin, x86_64-apple-darwin
 
       - name: Install dependencies
         run: npm ci

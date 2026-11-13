@@ -1,6 +1,6 @@
-use md5::{Md5, Digest};
+use md5::{Digest, Md5};
 use std::env;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 /// Generate an offline-mode UUID v3 from a username.
 /// Uses the same algorithm as Minecraft servers with online-mode=false:
@@ -43,71 +43,147 @@ pub fn get_novacraft_dir() -> PathBuf {
     novacraft_dir
 }
 
-/// Detect a Java installation on the system.
-/// Checks JAVA_HOME first, then searches PATH for javaw.exe (Windows) or java.
-pub fn detect_java() -> Option<String> {
-    // Check JAVA_HOME environment variable first
+/// The game directory of a profile: its own folder if it has one,
+/// otherwise the main NovaCraft folder (the "Predefinito" profile).
+pub fn game_dir(custom_dir: Option<&str>) -> PathBuf {
+    match custom_dir {
+        Some(d) if !d.trim().is_empty() => PathBuf::from(d),
+        _ => get_novacraft_dir(),
+    }
+}
+
+/// Keep only characters that are safe in a file name ([A-Za-z0-9_-]).
+pub fn safe_file_stem(name: &str) -> String {
+    let cleaned: String = name
+        .chars()
+        .map(|c| if c.is_ascii_alphanumeric() || c == '_' || c == '-' { c } else { '_' })
+        .collect();
+    if cleaned.is_empty() {
+        "_".to_string()
+    } else {
+        cleaned
+    }
+}
+
+/// Reduce a file name coming from outside (API, frontend) to a bare name,
+/// so it can never point outside the intended folder.
+pub fn bare_file_name(name: &str) -> Result<String, String> {
+    let bare = Path::new(name)
+        .file_name()
+        .map(|f| f.to_string_lossy().to_string())
+        .unwrap_or_default();
+    if bare.is_empty() || bare == "." || bare == ".." || bare != name {
+        return Err(format!("Nome file non valido: {}", name));
+    }
+    Ok(bare)
+}
+
+/// Open a folder in the OS file manager (Explorer / Finder / file manager).
+pub fn open_in_file_manager(path: &Path) -> Result<(), String> {
+    let _ = std::fs::create_dir_all(path);
+
+    #[cfg(windows)]
+    let program = "explorer";
+    #[cfg(target_os = "macos")]
+    let program = "open";
+    #[cfg(all(unix, not(target_os = "macos")))]
+    let program = "xdg-open";
+
+    std::process::Command::new(program)
+        .arg(path)
+        .spawn()
+        .map_err(|e| format!("Impossibile aprire la cartella: {}", e))?;
+    Ok(())
+}
+
+/// Every Java installation we can find on this computer (system ones, not the
+/// runtimes NovaCraft downloads), without duplicates.
+pub fn find_java_candidates() -> Vec<String> {
+    let mut found: Vec<PathBuf> = Vec::new();
+    let exe = java_executable();
+
+    // JAVA_HOME first
     if let Ok(java_home) = env::var("JAVA_HOME") {
-        let java_home = PathBuf::from(&java_home);
-        let javaw = java_home.join("bin").join(java_executable());
-        if javaw.exists() {
-            return Some(javaw.to_string_lossy().to_string());
-        }
+        found.push(PathBuf::from(java_home).join("bin").join(exe));
     }
 
-    // Search PATH for java executable
+    // Then everything on PATH
     if let Ok(path_var) = env::var("PATH") {
-        let separator = if cfg!(windows) { ';' } else { ':' };
-        for dir in path_var.split(separator) {
-            let java_path = PathBuf::from(dir).join(java_executable());
-            if java_path.exists() {
-                return Some(java_path.to_string_lossy().to_string());
+        for dir in env::split_paths(&path_var) {
+            let candidate = dir.join(exe);
+            // On macOS /usr/bin/java is only a stub that pops up an
+            // "install Java" window when no JDK is present: skip it.
+            if cfg!(target_os = "macos") && candidate == Path::new("/usr/bin/java") {
+                continue;
             }
+            found.push(candidate);
         }
     }
 
-    // Check common Windows installation paths
-    if cfg!(windows) {
-        let common_paths = [
+    // Common install folders (each vendor puts one sub-folder per version)
+    let roots: &[&str] = if cfg!(windows) {
+        &[
             "C:\\Program Files\\Java",
             "C:\\Program Files (x86)\\Java",
             "C:\\Program Files\\Eclipse Adoptium",
-            "C:\\Program Files\\Microsoft\\jdk-",
-        ];
-        for base in &common_paths {
-            let base_path = PathBuf::from(base);
-            if base_path.exists() {
-                if let Ok(entries) = std::fs::read_dir(&base_path) {
-                    for entry in entries.flatten() {
-                        let javaw = entry.path().join("bin").join("javaw.exe");
-                        if javaw.exists() {
-                            return Some(javaw.to_string_lossy().to_string());
-                        }
-                    }
-                }
+            "C:\\Program Files\\Microsoft",
+            "C:\\Program Files\\Zulu",
+            "C:\\Program Files\\BellSoft",
+            "C:\\Program Files\\Amazon Corretto",
+        ]
+    } else if cfg!(target_os = "macos") {
+        &["/Library/Java/JavaVirtualMachines"]
+    } else {
+        &["/usr/lib/jvm"]
+    };
+    for root in roots {
+        if let Ok(entries) = std::fs::read_dir(root) {
+            for entry in entries.flatten() {
+                let base = entry.path();
+                found.push(base.join("bin").join(exe));
+                found.push(base.join("Contents/Home/bin").join(exe)); // macOS layout
             }
         }
     }
 
-    // Check common macOS installation paths
-    if cfg!(target_os = "macos") {
-        let mac_base = PathBuf::from("/Library/Java/JavaVirtualMachines");
-        if mac_base.exists() {
-            if let Ok(entries) = std::fs::read_dir(&mac_base) {
-                for entry in entries.flatten() {
-                    let java_bin = entry.path().join("Contents/Home/bin/java");
-                    if java_bin.exists() {
-                        return Some(java_bin.to_string_lossy().to_string());
-                    }
-                }
+    let mut result: Vec<String> = Vec::new();
+    for p in found {
+        if p.is_file() {
+            let s = p.to_string_lossy().to_string();
+            if !result.iter().any(|r| r.eq_ignore_ascii_case(&s)) {
+                result.push(s);
             }
         }
     }
-
-    None
+    result
 }
 
 /// Returns the platform-specific Java executable name.
 fn java_executable() -> &'static str {
-    if cfg!(windows) { "javaw.exe" } else { "java" }
+    if cfg!(windows) {
+        "javaw.exe"
+    } else {
+        "java"
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn offline_uuid_matches_minecraft() {
+        // Value produced by Minecraft servers in offline mode for "Notch".
+        assert_eq!(offline_uuid("Notch"), "b50ad385-829d-3141-a216-7e7d7539ba7f");
+    }
+
+    #[test]
+    fn file_names_are_sanitized() {
+        assert_eq!(safe_file_stem("Steve_01"), "Steve_01");
+        assert_eq!(safe_file_stem("../evil"), "___evil");
+        assert!(bare_file_name("sodium.jar").is_ok());
+        assert!(bare_file_name("../sodium.jar").is_err());
+        assert!(bare_file_name("a/b.jar").is_err());
+        assert!(bare_file_name("").is_err());
+    }
 }

@@ -1,6 +1,6 @@
 [package]
 name = "novacraft-launcher"
-version = "0.1.0"
+version = "0.2.0"
 description = "NovaCraft Launcher - A modern Minecraft launcher"
 authors = ["NovaCraft Team"]
 edition = "2021"
@@ -23,7 +23,8 @@ sha1 = "0.10"
 md-5 = "0.10"
 zip = "2"
 dirs = "6"
-regex = "1"
+flate2 = "1"
+tar = "0.4"
 futures-util = "0.3"
 urlencoding = "2.1"
 base64 = "0.22"

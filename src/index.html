@@ -37,7 +37,7 @@
         </button>
       </nav>
       <div class="sidebar-footer">
-        <span class="version-tag">v0.2.0</span>
+        <span class="version-tag app-version">v0.2.0</span>
       </div>
     </aside>
 
@@ -150,11 +150,11 @@
             <!-- Skin Custom Actions -->
             <div class="skin-actions">
               <input type="file" id="skin-file-input" accept="image/png" style="display: none;" />
-              <button class="skin-btn" id="btn-upload-skin" type="button" title="Carica file .png dal computer">
+              <button class="skin-btn" id="btn-upload-skin" type="button" title="Carica una skin .png (64×64): si vedrà anche in gioco, in giocatore singolo">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 Carica Skin .png
               </button>
-              <button class="skin-btn-subtle" id="btn-reset-skin" type="button" title="Usa skin da nome utente">
+              <button class="skin-btn-subtle" id="btn-reset-skin" type="button" title="Torna alla skin del tuo account" style="display: none;">
                 Reset
               </button>
             </div>
@@ -168,7 +168,7 @@
           <div class="subview-header">
             <div>
               <h2 class="subview-title">Mods & Shaders</h2>
-              <p class="subview-desc">Cerca e scarica mod direttamente da Modrinth o gestisci i file installati.</p>
+              <p class="subview-desc">Cerca su Modrinth e installa nel profilo attivo. Le dipendenze (es. Fabric API) e Fabric vengono aggiunti in automatico.</p>
             </div>
             <div class="subview-tabs">
               <button class="tab-btn active" id="tab-browse-mods" type="button">Modrinth</button>
@@ -224,7 +224,7 @@
           <div class="subview-header">
             <div>
               <h2 class="subview-title">Profili e Istanze</h2>
-              <p class="subview-desc">Crea profili isolati con versioni, loader e modpack separati.</p>
+              <p class="subview-desc">Ogni profilo ha la sua cartella: mod, mondi e impostazioni separati. Il profilo "Predefinito" usa la cartella principale.</p>
             </div>
             <button class="btn-primary-action" id="btn-show-new-instance" type="button">
               + Nuovo Profilo
@@ -328,7 +328,7 @@
 
           <section class="settings-group">
             <h3 class="settings-heading">Info</h3>
-            <p class="settings-info">NovaCraft Launcher v0.2.0 — costruito con Tauri v2 + Rust (leggero, sicuro, no bloatware)</p>
+            <p class="settings-info">NovaCraft Launcher <span class="app-version">v0.2.0</span> — costruito con Tauri v2 + Rust (leggero, sicuro, no bloatware)</p>
           </section>
         </div>
       </div>
@@ -339,7 +339,7 @@
         <span class="status-separator">•</span>
         <span class="status-item" id="status-loader">Vanilla</span>
         <span class="status-separator">•</span>
-        <span class="status-item" id="status-dir">NovaCraft</span>
+        <span class="status-item" id="status-dir">Profilo: Predefinito</span>
       </footer>
     </main>
 
